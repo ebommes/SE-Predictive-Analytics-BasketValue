@@ -232,7 +232,7 @@ merged$lastBasketConsumption <- NULL
 data = total
 
 ### Only keep data
-rm(list = setdiff(ls(), "data"))
+rm(list = setdiff(ls(), c("data", "path", "path.data", "path.results", "path.source", "stempel")))
 
 data$userID = NULL
 data$lastBuy                  = NULL
