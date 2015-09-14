@@ -1,37 +1,9 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% University Assignment Title Page 
-% LaTeX Template
-% Version 1.0 (27/12/12)
-%
-% This template has been downloaded from:
-% http://www.LaTeXTemplates.com
-%
-% Original author:
-% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
-%
-% License:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-% 
-% Instructions for using this template:
-% This title page is capable of being compiled as is. This is not useful for 
-% including it in another document. To do this, you have two options: 
-%
-% 1) Copy/paste everything between \begin{document} and \end{document} 
-% starting at \begin{titlepage} and paste this into another LaTeX file where you 
-% want your title page.
-% OR
-% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
-% move this file to the same directory as the LaTeX file you wish to add it to. 
-% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
-% title page.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\title{Title page with logo}
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
 \documentclass[12pt]{article}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
@@ -57,9 +29,10 @@
 %	HEADING SECTIONS
 %----------------------------------------------------------------------------------------
 
-\textsc{\LARGE Humboldt University of Berlin }\\[0.3cm] % Name of your university/college
-\textsc{\LARGE Institute of Economics  }\\[0.3cm]
-\textsc{\Large Applied Predictive Analytics}\\[0.5cm] % Major heading such as course name
+\LARGE Humboldt-Universit{\"a}t zu Berlin \\[0.3cm] % Name of your university/college
+\LARGE School of Business and Economics  \\[0.3cm]
+\LARGE Chair of Information Systems  \\[0.3cm]
+\Large Applied Predictive Analytics\\[0.5cm] % Major heading such as course name
  % Minor heading such as course title
 
 %----------------------------------------------------------------------------------------
@@ -101,7 +74,7 @@ Ringolf Thomschke\\ % Your name
 %----------------------------------------------------------------------------------------
 %	LOGO SECTION
 %----------------------------------------------------------------------------------------
-
+\vspace{-25pt}
 \includegraphics{husiegel_sw_op.eps}\\[1cm] % Include a department/university logo - this will require the graphicx package
  
 %----------------------------------------------------------------------------------------
@@ -113,11 +86,12 @@ Ringolf Thomschke\\ % Your name
 \tableofcontents
 \newpage
 
-\section{Introduction and Task Description}
-
+\section{Introduction}
+Prudsys AG staged the 2015 Data Mining Cup for six weeks from April 7 to May 19 2015 and we participated as part of a seminar on ``Applied Predictive Analytics''. Our two submissions ranked first and sixth place out of 188 teams from a total of 153 universities from 48 countries. 
+We participated in the 2015 Data Mining Cup sponsored by prudsys AG and ranked first place. 
 For the 2015 Data Mining Cup, prudsys AG provided customer data from an online shop. From this data, the contestants had to predict the propensity of customers to redeem a coupon and the customers' basket value. After the release of the training and test data, the challenge was to create and submit predictions on the test data within six weeks. We divided the challenge into several different tasks which up to four team members were assigned to. In this report, we will describe the prediction of the basket value variable.\\ 
 
-\section{Data Description}
+\section{Data}
 
 The data set consisted of 6053 instances for which 33 variables were given. The distribution of the target variable basket value turned out to be highly right-skewed with a very large range  of over 135000 and showed over 237 of strong extremes (by definition in the boxplot concept). Furthermore, it showed significant peaks at lower levels which, however, remained undescribed in our further analysis. Finding an appropriate algorithm to detect outliers in the basket value variable, was another important task. This will also not be covered by this report as it was assigned to other team members.  The idea is to replace outliers by the customer's mean basket value or, if not available, by the overall mean. In our analysis, we decided to use a rather arbitrary upper fence of 700 for outliers which had been set by the data preparation group. based on the definition of strong extremes in the boxplot and a look at the histogram.
 
