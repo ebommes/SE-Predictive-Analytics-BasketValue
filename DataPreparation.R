@@ -1,3 +1,16 @@
+#############################################################################
+############################### Data Preparation ############################
+#############################################################################
+# The original data preparation file written by members of the data 
+# preparation task group.
+# In the context of basket value prediction, adjustments were made only in 
+# order to partition the data according to the distribution of the basket 
+# value variable.
+# This file is called by the Model Estimation procedure.
+# Set Paths if used standalone.
+
+
+
 #options(stringsAsFactors = FALSE)
 
 pack = c("caret", "data.table", "splitstackshape", "stats", "arules", "klaR")

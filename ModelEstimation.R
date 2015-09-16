@@ -1,3 +1,13 @@
+##############################################################################
+######################### Model Estimation ###################################
+##############################################################################
+# This file carries out the model estimation.
+# After calling Data Preparation.R, 12 different prediction models are trained
+# in parallel on the randomly partitioned dataset and then saved to
+# "/Estimated Models".
+
+
+
 pack1 = c("earth","elasticnet","leaps","kernlab","ipred",
   		  "plyr","rpart", "kknn", "nnet","brnn", "frbs",
   		  "RSNNS","foreach","caret","gbm","randomForest",
@@ -34,7 +44,7 @@ stempel = gsub(" ", "", stempel, fixed = TRUE)
 # Prep data
 setwd(path)
 print("Prep Data")
-source("Data Preparation.R")
+source("DataPreparation.R")
 setwd(path.results)
 saveRDS(data, file = paste(stempel, "data.rds", sep = ""))
 
@@ -42,7 +52,7 @@ models = c( "ctree", "blackboost", "RRFglobal", "mlp", "mlpWeightDecay", "gbm",
 	       "qrf", "glmboost", "cubist", "svmRadialCost", "svmRadial", "RRF", "rf", "cforest")
 
 # models = c("blackboost", "mlp")
-# "parRF",
+
 
 # DMC metric
 c.acs = function(data, lev = NULL, model = NULL){

@@ -6,97 +6,84 @@
 # on the training set. Extracted prediction are 
 # saved to "/Predictions".
 #####################################################
+pack1 = c("earth","elasticnet","leaps","kernlab","ipred",
+        "plyr","rpart", "kknn", "nnet","brnn", "frbs",
+        "RSNNS","foreach","caret","gbm","randomForest",
+      "RRF","party", "quantregForest", "mboost", "Cubist")
 
-pack =  
-c("earth","elasticnet","leaps","kernlab","ipred",
-"plyr","rpart", "kknn", "nnet","brnn", "frbs",
-"RSNNS","foreach","caret","gbm","randomForest",
-"RRF","party", "Cubist")
+pack2 = c("earth", "elasticnet", "leaps", "kernlab", "ipred", "plyr", "rpart",
+          "kknn", "nnet", "brnn", "frbs", "RSNNS", "foreach", "caret", "gbm",
+          "randomForest", "RRF", "party", "doParallel", "data.table",
+          "splitstackshape", "stats", "arules", "klaR", "elasticnet")
 
-for (p in pack) {
-  if (!require(p, character.only = T)) 
-{install.packages(p);
-	library(p, character.only = T)}
+pack = unique(c(pack1, pack2))
+
+lapply(pack, function(x) if (!(x %in% installed.packages())) {
+  install.packages(x)
+})
+
+lapply(pack, library, character.only = TRUE)
+
+models = c("blackboost", "cforest", "ctree", "cubist", "gbm", "glmboost", "mlp", "mlpWeightDecay",
+         "qrf", "rf", "RRF","RRFglobal", "svmRadial","svmRadialCost")
+
+ex     = c("set.dat.train", "set.dat.test", "set.dat.val", "models")
+
+
+# Set Paths
+path         = "H:/Projects/Predictive Analytics"
+path.data    = paste(path, "/DMC2015", sep = "")
+path.source  = paste(path, "/Sources", sep = "")
+path.results = paste(path, "/Estimated Models", sep = "")
+path.pred    = paste(path, "/Predictions", sep = "")
+
+#
+setwd(path.data)
+bv.val = read.csv("basketvalues.csv", sep = ";", dec = ",")
+bv.val = bv.val$x
+
+
+# Model list and unique time stamps
+set.est   = list.files(path.results)
+set.ind   = summary(as.factor(substr(set.est, 1, 14 ))) == 15
+set.compl = names(set.ind[set.ind == TRUE])
+
+fl = detectCores()
+### Loop over completed estimations
+for(i in 1:length(set.compl)){
+  setwd(path.results)
+  set           = set.compl[i]
+  print(set)
+  set.dat       = readRDS(paste(set, "data.rds", sep = ""))
+  set.dat.train = set.dat[set.dat$trainingSetIndex ==  1, ]
+  set.dat.test  = set.dat[set.dat$trainingSetIndex ==  0, ]
+  set.dat.val   = set.dat[set.dat$trainingSetIndex == -1, ]
+
+  cl = fl
+  cl = makeCluster(cl)
+  registerDoParallel(cl)
+
+  L = foreach(j = 1:length(models), .packages = pack, .export = ex) %dopar% {
+    model.name  = models[j]
+    model.sav   = paste(set, model.name, ".rds", sep = "")
+    model       = readRDS(model.sav)
+    model.train = predict(model, newdata = set.dat.train)
+    model.test  = predict(model, newdata = set.dat.test)
+    model.val   = predict(model, newdata = set.dat.val)
+
+    list(model.train = model.train, model.test = model.test, model.val = model.val)
+  }
+  stopCluster(cl)
+
+  names(L)    = models
+  model.train = do.call(cbind.data.frame, sapply(L, function(x) x[1]))
+  model.test  = do.call(cbind.data.frame, sapply(L, function(x) x[2]))
+  model.val   = do.call(cbind.data.frame, sapply(L, function(x) x[3]))
+
+  L = list(model.train = model.train, model.test = model.test, model.val = model.val,
+    bv.train = set.dat.train$basketValue, bv.val = bv.val,
+    bv.test = set.dat.test$basketValue, models = models)
+
+  setwd(path.pred)
+  saveRDS(L, paste(set, ".rds", sep = ""))
 }
-rm(p,pack)
-
-
-path = "~/Desktop/DMC/Estimated Models"
-path.output = "~/Desktop/DMC/Predictions"
-
-setwd(path)
-
-#Model list and unique time stamps
-files= list.files(path)
-tmp_stamp = 
-as.factor(unique(substr(files, 1, 14 )))
-
-#use only stamps for complete model sets
-for(n in 1:length(files)){
-    for(i in 1:length(tmp_stamp)){
-        freq = 
-        count(grepl(tmp_stamp[tnp_stamp=i], files))
-            if (freq[2,2]==15 & n==1){
-              compl = 
-              as.character(paste(tmp_stamp[
-              tmp_stamp=i]))
-            }
-            if(freq[2,2]==15){
-               compl2 = 
-               as.character(paste(tmp_stamp[
-               tmp_stamp=i]))
-               compl = cbind(compl, compl2)}
-    }
-}
-stamp= as.factor(unique(compl[1,]))
-
-models = as.factor(c("blackboost.rds", 
-"cforest.rds", "ctree.rds","cubist.rds","gbm.rds",
-"glmboost.rds","mlp.rds","mlpWeightDecay.rds",
-"qrf.rds", "rf.rds","RRF.rds","RRFglobal.rds", 
-"svmRadial.rds","svmRadialCost.rds"))
-
-setwd(path)
-
-#predictions for models
-for (i in 1:nlevels(stamp)){
-    ID = stamp[stamp=i]
-    data = readRDS(paste(as.character(ID), 
-    "data.rds", sep = ""))
-    train=data[data$trainingSetIndex==1,]
-  
-        for (n in 1:length(models)){
-             name = paste(as.character(ID), 
-             as.character(models[[n]]), sep = "")
-             readRDS(name)
-             
-              if(n == 1 & i==1 ){
-                   col = paste(substr(name, 15, 
-                   nchar(name)-4), i, sep="_")
-                   print(paste(Sys.time(), col, 
-                   sep=" "))      
-                   mod = readRDS(name)
-                   tmp = data.frame(predict(mod, 
-                   newdata=train))
-                   tmpcol = as.vector(col)
-               }
-               else{
-                   col = paste(substr(name, 15, 
-                   nchar(name)-4), i, sep="_")
-                   print(paste(Sys.time(), col, 
-                   sep=" "))      
-                   mod = readRDS(name)
-                   tmp2 = data.frame(predict(mod, 
-                   newdata=train))
-                   tmp  = cbind(tmp, tmp2)
-                   tmpcol2 = as.vector(col)
-                   tmpcol = as.vector(c(tmpcol,
-                   tmpcol2))
-                   colnames(tmp) = tmpcol
-               }
-        }
-}
-
-setwd(path.output)
-write.csv2(tmp, "predictions.csv", row.names = FALSE)
-
