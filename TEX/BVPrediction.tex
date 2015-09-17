@@ -116,7 +116,7 @@ The initial training data set contains 6,054 observations of 33 variables. The d
 315.50 & 1846.07 & 46.36 & 186.30 & 212.60 & 294.10 & 135,800 & 135,828.90\\ 
    \hline
    \hline
-\multicolumn{8}{l}{ \parbox{5.2in}{\vspace{1pt} \footnotesize{$\hat{\mu}$ and $\hat{\sigma}$  refer to the estimated mean and standard deviation, respectively. Q1, Q2, Q3 are the sample's first, second (median) and third Quantile. Min. and Max. are minimum and maximum and Range is defined as $Min. - Max.$}}}
+\multicolumn{8}{l}{ \parbox{5.2in}{\vspace{1pt} \footnotesize{$\hat{\mu}$ and $\hat{\sigma}$  refer to the estimated mean and standard deviation, respectively. Q1, Q2, Q3 are the sample's first, second (median) and third quartile. Min. and Max. are minimum and maximum and Range is defined as $Min. - Max.$}}}
 \end{tabular}
 \vspace{-5pt}
 \caption{Summary statistics of basket value}
@@ -135,7 +135,7 @@ In order to stay consistent with the outlier detection and data preparation meth
 We also make use of the same new variables, over 100, that have been defined during the initital competition.
 The partitioning of the data set into training and test (hold-out) set is necessary to avoid overfitting during methods described in Section \ref{sect:meth}. Again, we stay in line with the original estimation and split our data set into 80\% training and 20\% test sample.\\
 
-We also made sure that we can also build these variables for the provided prediction data set, also referred to as validation set. For example, we did not use any of the coupon usage variables to predict the basket values as they have not been available for the validation set since they are also regarded as target variables in the competition.
+We also made sure that we can build these variables for the provided prediction data set, also referred to as validation set. For example, we did not use any of the coupon usage variables to predict the basket values as they have not been available for the validation set since they are also regarded as target variables in the competition.
 Prudsys published the actual values of this data sets' target variables (and hence also $BV$) after the competition ended.  
 
 \section{Methods and Estimation}
@@ -149,7 +149,7 @@ AC = \sum_{i=1}^n \frac{|BV_{i} - \mbox{Pred}(BV_{i})|}{\frac{1}{n} \sum_{j=1}^n
 \end{equation}
 with $\mbox{Pred}(\cdot)$ referring to the individual model prediction. One can observe that it is basically the Manhatten distance scaled by the factor  $\frac{1}{n} \sum_{j=1}^n BV_{i}$ and thus, models optimized using AC should be more robust against outliers than e.g. models utilizing the Euclidian distance. \\
 
-After estimation of the base models, we use the ensemble selection techniques as described in both \cite{Caruana2006} and \cite{Caruana04}. More specifically, we implement the bagged ensemble selection method with replacement as applied by \cite{Caruana04}. The idea behing ensemble selection is to combine the predictions of all models to a single prediction which is of superior power. The data set which is used to determine the weights of each individual model in the ensemble prediction is called hillclimbing set. To avoid overfitting, the ensemble's predictive power should be assessed according a test set with observations that have not been used to either train the individual models or create the ensemble weights.\\
+After estimation of the base models, we use the ensemble selection techniques as described in both \cite{Caruana2006} and \cite{Caruana04}. More specifically, we implement the bagged ensemble selection method with replacement as applied by \cite{Caruana04}. The idea behind ensemble selection is to combine the predictions of all models to a single prediction which is of superior power. The data set which is used to determine the weights of each individual model in the ensemble prediction is called hill-climbing set. To avoid overfitting, the ensemble's predictive power should be assessed according to a test set with observations that have not been used to either train the individual models or create the ensemble weights.\\
 
 Up to now, there is no difference between our approach during the competition's duration and our current discussion of the results. Our main additional contribution in this seminar paper is, that we also look at the extent to which the selection of training and test set influences the performance regarding the DMC prediction data set. We repeatedly split the data set into different training and test sets to achieve this goal. Afterwards, model estimation and ensemble selection is performed for each of these sets.
 This approach lets us determine how heavily the prediction performance depends on the initial choice of training and test data.  \\
@@ -161,7 +161,7 @@ We split the initial data set 98 times in different training and test set, prepa
 
 
 \section{Results}
-Firstly, we review the fit of the base models during the competition phase. We perform ensemble selection according to Section \ref{sect:meth}. The resulting weights are presented in Table \ref{tab:compens}. The models \texttt{cubist} and \texttt{parRF} obtain the largest weights and thus, represent together 80\% of the resulting ensemble prediction.
+Firstly, we review the fit of the base models during the competition phase. We perform ensemble selection according to Section \ref{sect:meth}. The resulting weights are presented in Table \ref{tab:compens}. The models \texttt{cubist} and \texttt{parRF} obtain the largest weights and, thus, represent together 80\% of the resulting ensemble prediction.
 
 \begin{table}
 	\centering
@@ -183,7 +183,7 @@ Table \ref{tab:compres} reports the ACs of our models, estimated by using the tr
 	\begin{tabular}{l|cc}
 		\hline
 		\hline
-		Model & AC Holdout Set & AC Validation Set \\
+		Model & AC Hold-out Set & AC Validation Set \\
 		& Sample (n=1210)  &  (n=669) \\\hline
 		UserID-Model & 2,486 & 1,167 \\
 		\texttt{cubist} & 3,355 & 1,741\\
